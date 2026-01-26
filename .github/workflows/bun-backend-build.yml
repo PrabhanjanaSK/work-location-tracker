@@ -20,6 +20,13 @@ jobs:
 
       - name: Install dependencies
         run: cd backend && bun install
+      
+      - name: Create .env file
+        run: |
+          echo "PORT=4000" >> .env
+          echo "DATABASE_URL=postgres://postgres:wlt@localhost:5433/wlt" >> .env
+          echo "JWT_SECRET=top-tier-password-you-will-never-guess-hehe" >> .env
+          echo "JWT_EXPIRES_IN=1h" >> .env
 
       - name: Build backend
         run: cd backend && bun run dev
