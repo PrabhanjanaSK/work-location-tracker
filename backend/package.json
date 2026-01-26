@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --watch src/app.js"
+    "dev": "bun --watch src/app.js",
+    "build": "bun build app.js --outfile dist/app.js --platform node"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
