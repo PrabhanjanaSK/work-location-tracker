@@ -33,7 +33,7 @@ jobs:
         run: cd backend && bun build app.js --outfile dist/app.js --platform node
   
       - name: Publish artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-build
           path: backend/dist/
