@@ -7,17 +7,18 @@ if (!JWT_SECRET) {
 }
 
 export function requireAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
+  // 1️⃣ Read token from cookie
+  const token = req.cookies?.access_token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!token) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const token = authHeader.split(" ")[1];
-
   try {
+    // 2️⃣ Verify token
     const payload = jwt.verify(token, JWT_SECRET);
 
+    // 3️⃣ Attach user to request
     req.user = {
       id: payload.sub,
       role: payload.role,

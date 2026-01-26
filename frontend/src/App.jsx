@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { lazy, Suspense } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const AppLayout = lazy(() => import("./ui/AppLayout"));
+const Analytics = lazy(() => import("./features/analytics/Analytics"));
+const Login = lazy(() => import("./features/auth/Login"));
+const Calendar = lazy(() => import("./features/calendar/Calendar"));
+const Home = lazy(() => import("./ui/Home"));
+const Profile = lazy(() => import("./features/profile/Profile"));
+
+import { analyticsLoader } from "./features/analytics/analytics.loader";
+import { loginAction } from "./features/auth/action";
+import { calendarLoader } from "./features/calendar/calendar.loader";
+import { profileLoader } from "./features/profile/profile.loader";
+
+import ErrorPage from "./ui/Error";
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+    action: loginAction,
+    errorElement: <ErrorPage />,
+  },
+
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: (
+          <Suspense>
+            <Home />
+          </Suspense>
+        ),
+        errorElement: <ErrorPage />,
+      },
+
+      {
+        path: "/analytics",
+        element: (
+          <Suspense>
+            <Analytics />
+          </Suspense>
+        ),
+        loader: analyticsLoader,
+        errorElement: <ErrorPage />,
+      },
+
+      {
+        path: "/work-locations",
+        element: (
+          <Suspense>
+            <Calendar />
+          </Suspense>
+        ),
+        loader: calendarLoader,
+        errorElement: <ErrorPage />,
+      },
+
+      {
+        path: "/profile",
+        element: (
+          <Suspense>
+            <Profile />
+          </Suspense>
+        ),
+        loader: profileLoader,
+        errorElement: <ErrorPage />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

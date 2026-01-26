@@ -7,11 +7,16 @@ export async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    const result = await loginUser(email, password);
+    const { token, user } = await loginUser(email, password);
 
-    res.json(result);
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      // secure: true
+    });
+
+    res.json({ user });
   } catch (err) {
-    // Do NOT leak which part failed
     res.status(401).json({
       error: "Invalid email or password",
     });
