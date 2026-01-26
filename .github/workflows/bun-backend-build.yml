@@ -2,9 +2,8 @@ name: build work-location-tracker
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - '*'   
 
 jobs:
   build:
