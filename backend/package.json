@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch src/app.js",
-    "build": "bun build src/app.js --outdir dist"
+    "build": "bun build src/app.js --outdir dist --target node"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
