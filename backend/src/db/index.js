@@ -1,5 +1,7 @@
 import pkg from "pg";
 
+pkg.types.setTypeParser(1082, (value) => value); // 1082 = DATE OID
+
 const { Pool } = pkg;
 
 if (!process.env.DATABASE_URL) {

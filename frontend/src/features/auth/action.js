@@ -10,5 +10,5 @@ export async function loginAction({ request }) {
     password: formData.get("password"),
   });
 
-  return redirect("/profile");
+  return redirect("/");
 }

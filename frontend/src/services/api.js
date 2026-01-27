@@ -5,13 +5,16 @@ export async function apiFetch(path, options = {}) {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      ...options.headers,
     },
     ...options,
   });
 
   if (!res.ok) {
-    throw new Response(await res.text(), { status: res.status });
+    const text = await res.text();
+    throw new Response(text || null, { status: res.status });
   }
 
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }

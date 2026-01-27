@@ -1,8 +1,5 @@
 import { loginUser, registerUser } from "../services/auth.service.js";
 
-/**
- * POST /api/auth/login
- */
 export async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -23,10 +20,6 @@ export async function login(req, res) {
   }
 }
 
-/**
- * POST /api/auth/register
- * DEV / INTERNAL USE ONLY (can be removed later)
- */
 export async function register(req, res) {
   try {
     const { email, password, role } = req.body;
@@ -39,4 +32,15 @@ export async function register(req, res) {
       error: err.message,
     });
   }
+}
+
+export async function logout(req, res) {
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+  });
+
+  res.sendStatus(204);
 }

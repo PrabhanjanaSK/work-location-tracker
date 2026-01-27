@@ -1,5 +1,5 @@
 import express from "express";
-import { login, register } from "../controllers/auth.controller.js";
+import { login, logout, register } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ const router = express.Router();
  * body: { email, password }
  */
 router.post("/login", login);
+
+router.post("/logout", logout);
 
 /**
  * POST /api/auth/register

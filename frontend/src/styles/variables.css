@@ -1,0 +1,57 @@
+/* variables.css */
+:root {
+  /* Colors */
+  --color-bg: #eef2f7;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+
+  --color-danger: #dc2626;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Typography */
+  --font-base:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+
+  /* Layout */
+  --header-height: 64px;
+  --max-width: 1200px;
+
+  /* UI */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* Locations */
+  --event-wfo: #22c55e; /* green */
+  --event-wfh: #3b82f6; /* blue */
+  --event-leave: #f97316; /* orange */
+  --event-holiday: #64748b; /* slate/gray */
+
+  /* Day background tints */
+  --day-wfo-bg: rgba(34, 197, 94, 0.18); /* green */
+  --day-wfh-bg: rgba(59, 130, 246, 0.18); /* blue */
+  --day-leave-bg: rgba(249, 115, 22, 0.2); /* orange */
+  --day-holiday-bg: rgba(100, 116, 139, 0.18); /* slate */
+
+  --accent-wfo: #22c55e;
+  --accent-wfh: #3b82f6;
+  --accent-leave: #f97316;
+  --accent-holiday: #64748b;
+}

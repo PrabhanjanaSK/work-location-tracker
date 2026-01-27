@@ -10,10 +10,15 @@ const Profile = lazy(() => import("./features/profile/Profile"));
 
 import { analyticsLoader } from "./features/analytics/analytics.loader";
 import { loginAction } from "./features/auth/action";
+import { requireAuthLoader } from "./features/auth/requireAuth.loader";
 import { calendarLoader } from "./features/calendar/calendar.loader";
 import { profileLoader } from "./features/profile/profile.loader";
 
 import ErrorPage from "./ui/Error";
+
+import "./styles/globals.css";
+import "./styles/reset.css";
+import "./styles/variables.css";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +29,10 @@ const router = createBrowserRouter([
   },
 
   {
+    id: "root",
     element: <AppLayout />,
+    loader: requireAuthLoader,
+    shouldRevalidate: () => false,
     children: [
       {
         path: "/",
