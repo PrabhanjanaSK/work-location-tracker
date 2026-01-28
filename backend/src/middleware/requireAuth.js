@@ -1,13 +1,8 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET is not set");
-}
-
-export function requireAuth(req, res, next) {
-  // 1️⃣ Read token from cookie
+export async function requireAuth(req, res, next) {
   const token = req.cookies?.access_token;
 
   if (!token) {
@@ -15,17 +10,15 @@ export function requireAuth(req, res, next) {
   }
 
   try {
-    // 2️⃣ Verify token
-    const payload = jwt.verify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
 
-    // 3️⃣ Attach user to request
     req.user = {
       id: payload.sub,
       role: payload.role,
     };
 
     next();
-  } catch (err) {
+  } catch {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 }

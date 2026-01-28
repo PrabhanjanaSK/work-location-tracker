@@ -1,11 +1,10 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import pool from "../db/index.js";
 
 const SALT_ROUNDS = 10;
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not set in environment variables");
@@ -37,9 +36,13 @@ export async function registerUser(email, password, role = "EMPLOYEE") {
  * Authenticate user and issue JWT
  */
 export async function loginUser(email, password) {
+  console.log("STEP 1: entered loginUser");
+
   if (!email || !password) {
     throw new Error("email and password are required");
   }
+
+  console.log("STEP 2: before DB query");
 
   const { rows } = await pool.query(
     `
@@ -51,28 +54,36 @@ export async function loginUser(email, password) {
     [email],
   );
 
+  console.log("STEP 3: after DB query", rows);
+
   if (!rows.length) {
     throw new Error("Invalid credentials");
   }
 
   const user = rows[0];
 
+  console.log("STEP 4: before bcrypt");
+
   const isValidPassword = await bcrypt.compare(password, user.password_hash);
+
+  console.log("STEP 5: after bcrypt", isValidPassword);
 
   if (!isValidPassword) {
     throw new Error("Invalid credentials");
   }
 
-  const token = jwt.sign(
-    {
-      sub: user.id,
-      role: user.role,
-    },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRES_IN,
-    },
-  );
+  console.log("STEP 6: before JWT");
+
+  const secret = new TextEncoder().encode(JWT_SECRET);
+
+  const token = await new SignJWT({ role: user.role })
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(String(user.id))
+    .setIssuedAt()
+    .setExpirationTime("1d")
+    .sign(secret);
+
+  console.log("STEP 7: after JWT");
 
   return {
     token,

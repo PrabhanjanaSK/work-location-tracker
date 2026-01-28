@@ -7,7 +7,7 @@ export async function requireAuthLoader() {
     return { user };
   } catch (err) {
     if (err instanceof Response && err.status === 401) {
-      throw redirect("/");
+      throw redirect("/login");
     }
     throw err;
   }
