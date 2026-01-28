@@ -39,9 +39,18 @@ This is just one way to use the tool. Teams are encouraged to adapt it to their 
 work-location-tracker/
 ├── backend/
 ├── frontend/
+├── db/
 └── README.md
 
 ---
+## Database Setup
+Execute this if you had previously run the container
+docker compose down -v
+To start the container
+docker compose up -d
+docker exec <docker flags> <container> <cmd to run inside the container>
+Example:
+docker exec -it worktracker-db psql -U postgres -d worktracker
 
 ## Backend Setup
 
@@ -52,7 +61,7 @@ cd backend
 bun install
 ```
 
-### Setup environment variables
+### Setup environment
 
 Create a .env file inside the backend folder:
 
@@ -72,6 +81,14 @@ bun install
 
 ### Run frontend
 
+Create a .env file inside the frontend folder:
+VITE_API_URL=<Domain:Port>
+Example:
+VITE_API_URL=http://localhost:4000
 bun run dev
 
 ---
+## End User Guide?
+Admin team has populated the DB with team's data (Team Member and Manager). 
+Team can only login and cannot create a new user in DB for security reasons.
+Team Member fills the data correct data in an intuitive web interface and can visualise it. 
