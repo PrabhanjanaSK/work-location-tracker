@@ -1,6 +1,7 @@
 import {
   addWorkLocation,
   editWorkLocation,
+  getTodayStatusBoard,
   listWorkLocations,
   removeWorkLocation,
 } from "../services/workLocations.service.js";
@@ -59,6 +60,18 @@ export async function deleteWorkLocation(req, res) {
 
     res.status(204).send();
   } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+export async function getTodayStatusBoardController(req, res) {
+  try {
+    const board = await getTodayStatusBoard(req.user);
+    res.json(board);
+  } catch (err) {
+    if (err.message === "Forbidden") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
     res.status(400).json({ error: err.message });
   }
 }

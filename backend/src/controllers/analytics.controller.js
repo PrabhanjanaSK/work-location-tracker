@@ -1,5 +1,5 @@
 import {
-  getGlobalAnalytics,
+  getGlobalAnalyticsWithEmployees,
   getMyAnalytics,
 } from "../services/analytics.service.js";
 
@@ -17,10 +17,11 @@ export async function mySummary(req, res) {
 
 /**
  * GET /api/analytics/summary/all
+ * Manager-only (MVP: includes employee breakdown)
  */
 export async function allSummary(req, res) {
   try {
-    const data = await getGlobalAnalytics(req.user);
+    const data = await getGlobalAnalyticsWithEmployees(req.user);
     res.json(data);
   } catch (err) {
     if (err.message === "Forbidden") {

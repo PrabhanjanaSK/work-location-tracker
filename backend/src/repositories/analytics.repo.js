@@ -31,3 +31,20 @@ export async function getAllAnalytics() {
 
   return rows;
 }
+
+export async function getEmployeeAnalyticsRows() {
+  const { rows } = await pool.query(`
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      wl.location,
+      COUNT(*)::int AS count
+    FROM users u
+    JOIN work_locations wl ON wl.user_id = u.id
+    GROUP BY u.id, u.name, u.email, wl.location
+    ORDER BY u.name
+  `);
+
+  return rows;
+}

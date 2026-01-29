@@ -1,4 +1,4 @@
-import { Form, useActionData, useNavigation } from "react-router-dom";
+import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import styles from "./Login.module.css";
 
 function Login() {
@@ -48,6 +48,10 @@ function Login() {
           >
             {isSubmitting ? "Signing in..." : "Login"}
           </button>
+
+          <p className={styles.footerText}>
+            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+          </p>
 
           {error?.error && (
             <p className={styles.error} role="alert">

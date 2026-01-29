@@ -1,5 +1,6 @@
 import {
   getAllAnalytics,
+  getEmployeeAnalyticsRows,
   getUserAnalytics,
 } from "../repositories/analytics.repo.js";
 
@@ -19,6 +20,30 @@ function normalize(rows) {
   }
 
   return result;
+}
+
+function normalizeEmployeeRows(rows) {
+  const map = {};
+
+  for (const row of rows) {
+    if (!map[row.id]) {
+      map[row.id] = {
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        WFO: 0,
+        WFH: 0,
+        LEAVE: 0,
+        HOLIDAY: 0,
+        TOTAL: 0,
+      };
+    }
+
+    map[row.id][row.location] = row.count;
+    map[row.id].TOTAL += row.count;
+  }
+
+  return Object.values(map);
 }
 
 /**
@@ -47,4 +72,28 @@ export async function getGlobalAnalytics(user) {
 
   const rows = await getAllAnalytics();
   return normalize(rows);
+}
+
+/**
+ * Global analytics + employee breakdown (manager only)
+ * MVP: reused by /summary/all
+ */
+export async function getGlobalAnalyticsWithEmployees(user) {
+  if (!user?.role) {
+    throw new Error("Invalid user context");
+  }
+
+  if (user.role !== "MANAGER") {
+    throw new Error("Forbidden");
+  }
+
+  // existing global summary logic
+  const summaryRows = await getAllAnalytics();
+  const summary = normalize(summaryRows);
+
+  // employee-wise breakdown
+  const employeeRows = await getEmployeeAnalyticsRows();
+  const employees = normalizeEmployeeRows(employeeRows);
+
+  return { summary, employees };
 }

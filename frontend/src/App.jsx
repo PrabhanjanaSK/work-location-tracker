@@ -7,10 +7,12 @@ const Login = lazy(() => import("./features/auth/Login"));
 const Calendar = lazy(() => import("./features/calendar/Calendar"));
 const Home = lazy(() => import("./ui/Home"));
 const Profile = lazy(() => import("./features/profile/Profile"));
+const Signup = lazy(() => import("./features/auth/Signup"));
 
 import { analyticsLoader } from "./features/analytics/analytics.loader";
 import { loginAction } from "./features/auth/action";
 import { requireAuthLoader } from "./features/auth/requireAuth.loader";
+import { signupAction } from "./features/auth/signup.action";
 import { calendarLoader } from "./features/calendar/calendar.loader";
 import { profileLoader } from "./features/profile/profile.loader";
 
@@ -21,6 +23,12 @@ import "./styles/reset.css";
 import "./styles/variables.css";
 
 const router = createBrowserRouter([
+  {
+    path: "/signup",
+    element: <Signup />,
+    action: signupAction,
+  },
+
   {
     path: "/login",
     element: <Login />,
@@ -37,7 +45,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense>
+          <Suspense fallback={<p>Loading...</p>}>
             <Home />
           </Suspense>
         ),
@@ -47,7 +55,7 @@ const router = createBrowserRouter([
       {
         path: "/analytics",
         element: (
-          <Suspense>
+          <Suspense fallback={<p>Loading...</p>}>
             <Analytics />
           </Suspense>
         ),
@@ -58,7 +66,7 @@ const router = createBrowserRouter([
       {
         path: "/work-locations",
         element: (
-          <Suspense>
+          <Suspense fallback={<p>Loading...</p>}>
             <Calendar />
           </Suspense>
         ),
@@ -69,7 +77,7 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          <Suspense>
+          <Suspense fallback={<p>Loading...</p>}>
             <Profile />
           </Suspense>
         ),
@@ -81,7 +89,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider router={router} future={{ v7_startTransition: true }} />
+  );
 }
 
 export default App;
