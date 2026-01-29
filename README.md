@@ -90,5 +90,5 @@ bun run dev
 ---
 ## End User Guide?
 Admin team has populated the DB with team's data (Team Member and Manager). 
-Team can only login and cannot create a new user in DB for security reasons.
-Team Member fills the data correct data in an intuitive web interface and can visualise it. 
+Team members can signup and login and fill data.
+Manager users cannot signup and can visualise data of their team members.
