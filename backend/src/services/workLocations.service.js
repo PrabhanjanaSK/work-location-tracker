@@ -1,7 +1,7 @@
 import {
   createWorkLocation,
   deleteWorkLocationById,
-  getAllWorkLocations,
+  getTodayWorkLocations,
   getWorkLocationsByUser,
   updateWorkLocationById,
 } from "../repositories/workLocations.repo.js";
@@ -9,12 +9,8 @@ import {
 const VALID_LOCATIONS = ["WFO", "WFH", "LEAVE", "HOLIDAY"];
 
 export async function listWorkLocations(user) {
-  if (!user || !user.id || !user.role) {
+  if (!user || !user.id) {
     throw new Error("Invalid user context");
-  }
-
-  if (user.role === "MANAGER") {
-    return getAllWorkLocations();
   }
 
   return getWorkLocationsByUser(user.id);
@@ -48,4 +44,37 @@ export async function removeWorkLocation(userId, id) {
   if (!id) throw new Error("id is required");
 
   return deleteWorkLocationById(userId, id);
+}
+
+export async function getTodayStatusBoard(user) {
+  if (!user || user.role !== "MANAGER") {
+    throw new Error("Forbidden");
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const rows = await getTodayWorkLocations(today);
+
+  const board = {
+    WFO: [],
+    WFH: [],
+    LEAVE: [],
+    HOLIDAY: [],
+    NOT_MARKED: [],
+  };
+
+  for (const row of rows) {
+    const employee = {
+      id: row.id,
+      name: row.name,
+      email: row.email,
+    };
+
+    if (!row.location) {
+      board.NOT_MARKED.push(employee);
+    } else if (VALID_LOCATIONS.includes(row.location)) {
+      board[row.location].push(employee);
+    }
+  }
+
+  return board;
 }

@@ -1,14 +1,18 @@
 import { redirect } from "react-router-dom";
 import { apiFetch } from "../../services/api";
 
-export async function requireAuthLoader() {
+export async function requireAuthLoader({ request }) {
+  const url = new URL(request.url);
+  const publicPaths = ["/login", "/signup"];
+
+  if (publicPaths.includes(url.pathname)) {
+    return null;
+  }
+
   try {
-    const user = await apiFetch("/api/me");
-    return { user };
-  } catch (err) {
-    if (err instanceof Response && err.status === 401) {
-      throw redirect("/login");
-    }
-    throw err;
+    await apiFetch("/api/me");
+    return null;
+  } catch {
+    return redirect("/login");
   }
 }

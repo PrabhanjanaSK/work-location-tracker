@@ -22,9 +22,9 @@ export async function login(req, res) {
 
 export async function register(req, res) {
   try {
-    const { email, password, role } = req.body;
+    const { name, email, password, role } = req.body;
 
-    const user = await registerUser(email, password, role);
+    const user = await registerUser(email, password, role, name);
 
     res.status(201).json(user);
   } catch (err) {

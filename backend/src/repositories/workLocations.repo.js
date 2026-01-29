@@ -24,6 +24,26 @@ export async function getWorkLocationsByUser(userId) {
   return rows;
 }
 
+export async function getTodayWorkLocations(today) {
+  const { rows } = await pool.query(
+    `
+    SELECT
+      u.id,
+      u.name,
+      u.email,
+      wl.location
+    FROM users u
+    LEFT JOIN work_locations wl
+      ON wl.user_id = u.id
+     AND wl.work_date = $1
+    ORDER BY u.name
+    `,
+    [today],
+  );
+
+  return rows;
+}
+
 export async function createWorkLocation(userId, workDate, location) {
   const { rows } = await pool.query(
     `

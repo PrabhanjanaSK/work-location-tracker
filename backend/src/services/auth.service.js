@@ -13,20 +13,20 @@ if (!JWT_SECRET) {
 /**
  * Register a new user (DEV / internal use for now)
  */
-export async function registerUser(email, password, role = "EMPLOYEE") {
-  if (!email || !password) {
-    throw new Error("email and password are required");
+export async function registerUser(email, password, role = "EMPLOYEE", name) {
+  if (!email || !password || !name) {
+    throw new Error("Name, email and password are required");
   }
 
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
   const { rows } = await pool.query(
     `
-    INSERT INTO users (email, password_hash, role)
-    VALUES ($1, $2, $3)
+    INSERT INTO users (email, password_hash, role, name)
+    VALUES ($1, $2, $3, $4)
     RETURNING id, email, role
     `,
-    [email, passwordHash, role],
+    [email, passwordHash, role, name],
   );
 
   return rows[0];

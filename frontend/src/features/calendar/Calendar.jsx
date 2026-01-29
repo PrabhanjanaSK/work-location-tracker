@@ -9,7 +9,7 @@ import FullCalendar from "@fullcalendar/react";
 import { apiFetch } from "../../services/api";
 
 function Calendar() {
-  const workLocations = useLoaderData();
+  const { workLocations, role, todayBoard } = useLoaderData();
   const revalidator = useRevalidator();
   const dialogRef = useRef(null);
 
@@ -137,7 +137,40 @@ function Calendar() {
 
   return (
     <div className={styles.container}>
+      {role === "MANAGER" && todayBoard && (
+        <div className={styles.todayBoard}>
+          <h2 className={styles.sectionTitle}>Today&apos;s Status</h2>
+
+          <div className={styles.boardGrid}>
+            {["WFO", "WFH", "LEAVE", "HOLIDAY"].map((status) => (
+              <div key={status} className={styles.boardColumn}>
+                <div className={styles.columnHeader}>{status}</div>
+
+                <div className={styles.columnBody}>
+                  {!todayBoard[status] || todayBoard[status].length === 0 ? (
+                    <span className={styles.empty}>—</span>
+                  ) : (
+                    todayBoard[status].map((emp) => (
+                      <div key={emp.id} className={styles.employee}>
+                        {emp.name}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <h1 className={styles.title}>Calendar</h1>
+
+      <div className={styles.legend}>
+        <span className={styles.wfo}>WFO</span>
+        <span className={styles.wfh}>WFH</span>
+        <span className={styles.leave}>Leave</span>
+        <span className={styles.holiday}>Holiday</span>
+      </div>
 
       <div className={styles.calendar}>
         <FullCalendar
@@ -145,7 +178,21 @@ function Calendar() {
           initialView="dayGridMonth"
           timeZone="local"
           events={events}
-          dateClick={(info) => openDialog(info.dateStr)}
+          // dateClick={(info) => {
+          //   if (info.date > new Date()) return;
+          //   openDialog(info.dateStr);
+          // }}
+          dateClick={(info) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const clickedDate = new Date(info.date);
+            clickedDate.setHours(0, 0, 0, 0);
+
+            if (clickedDate.getTime() !== today.getTime()) return;
+
+            openDialog(info.dateStr);
+          }}
           eventClick={(info) => {
             const dateKey = info.event.startStr;
             const id = info.event.id;

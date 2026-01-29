@@ -1,5 +1,19 @@
-import { fetchWorkLocations } from "../../services/calendar";
+import { apiFetch } from "../../services/api";
+import { fetchTodayBoard, fetchWorkLocations } from "../../services/calendar";
 
-export function calendarLoader() {
-  return fetchWorkLocations();
+export async function calendarLoader() {
+  const workLocations = await fetchWorkLocations();
+  const user = await apiFetch("/api/me");
+
+  let todayBoard = null;
+
+  if (user.role === "MANAGER") {
+    todayBoard = await fetchTodayBoard();
+  }
+
+  return {
+    workLocations,
+    role: user.role,
+    todayBoard,
+  };
 }
