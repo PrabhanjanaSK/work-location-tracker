@@ -16,7 +16,7 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Backend dependencies
+      - name: Install dependencies
         run: cd backend && bun install
       
       - name: Create .env file
@@ -29,21 +29,9 @@ jobs:
 
       - name: Build backend
         run: cd backend && bun run build
-      
-      - name: Install Frontend dependencies
-        run: cd frontend && bun install
-      
-      - name: Build frontend
-        run: cd frontend && bun run build
   
       - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
           path: backend/dist/
-          
-      - name: Publish artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist/
