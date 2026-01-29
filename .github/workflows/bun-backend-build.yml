@@ -35,6 +35,9 @@ jobs:
       
       - name: Build frontend
         run: cd frontend && bun run build
+
+      - name: Run frontend test
+        run: cd frontend && bun run test
   
       - name: Publish artifact
         uses: actions/upload-artifact@v4
