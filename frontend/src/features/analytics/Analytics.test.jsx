@@ -5,33 +5,32 @@ import Analytics from "./Analytics";
 
 describe("Analytics page", () => {
   it("renders analytics values correctly", async () => {
-    // Arrange
-    const mockData = {
-      WFO: 2,
-      WFH: 3,
-      LEAVE: 1,
-      HOLIDAY: 0,
-    };
-
     const router = createMemoryRouter(
       [
         {
           path: "/analytics",
           element: <Analytics />,
-          loader: () => mockData,
+          loader: () => ({
+            role: "EMPLOYEE",
+            summary: {
+              WFO: 2,
+              WFH: 3,
+              LEAVE: 1,
+              HOLIDAY: 0,
+            },
+            employees: [],
+          }),
         },
       ],
       { initialEntries: ["/analytics"] },
     );
 
-    // Act
     render(<RouterProvider router={router} />);
 
-    // Assert (ASYNC because loader resolves)
     expect(await screen.findByText("Work From Office")).toBeInTheDocument();
-    expect(await screen.findByText("2")).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
 
-    expect(await screen.findByText("Work From Home")).toBeInTheDocument();
-    expect(await screen.findByText("3")).toBeInTheDocument();
+    expect(screen.getByText("Work From Home")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument();
   });
 });
