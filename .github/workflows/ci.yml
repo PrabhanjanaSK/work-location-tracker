@@ -1,0 +1,37 @@
+name: build work-location-tracker
+
+on:
+  workflow_dispatch
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: cd backend && bun install
+      
+      - name: Create .env file
+        run: |
+          cd backend
+          echo "PORT=4000" >> .env
+          echo "DATABASE_URL=postgres://postgres:wlt@localhost:5433/wlt" >> .env
+          echo "JWT_SECRET=top-tier-password-you-will-never-guess-hehe" >> .env
+          echo "JWT_EXPIRES_IN=1h" >> .env
+
+      - name: Build backend
+        run: cd backend && bun run build
+  
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: backend/dist/
